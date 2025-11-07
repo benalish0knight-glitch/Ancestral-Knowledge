@@ -23,7 +23,8 @@ Email: admin@admin.com
 
 Senha: password
 
-> [! IMPORTANT]
+
+
 > Assim que entrar, vá em:
 
 1) Settings (configurações) no canto superior direito
