@@ -1,0 +1,46 @@
+services:
+  # Serviço do BookStack
+  bookstack:
+    image: lscr.io/linuxserver/bookstack:latest
+    container_name: bookstack
+    environment:
+      # IDs de usuário e grupo
+      - PUID=1000
+      - PGID=1000
+      # Fuso horário
+      - TZ=America/Sao_Paulo
+      # URL externa de acesso ao BookStack
+      - APP_URL=http://localhost:6875
+      # Chave de segurança da aplicação (32 caracteres base64)
+      # bash: openssl rand -base64 32
+      - APP_KEY=base64:nP+DCjqiK0SFzyA5lMsdNOIrjg1DALDkwXyZ8mNpQrE=
+      # --- Configurações do Banco de Dados ---
+      - DB_HOST=db
+      - DB_PORT=3306
+      - DB_USERNAME=bookstackuser
+      - DB_PASSWORD=SuaSenhaSeguraAqui123!
+      - DB_DATABASE=bookstackdb
+      # Conexão de fila
+      - QUEUE_CONNECTION=database
+    volumes:
+      # Usando caminho relativo (cria pasta no diretório atual)
+      - ./bookstack_config:/config
+    ports:
+      - 6875:80
+    restart: unless-stopped
+    depends_on:
+      - db
+
+  # Serviço do Banco de Dados MySQL
+  db:
+    image: mariadb:10.6
+    container_name: bookstack_db
+    environment:
+      - MYSQL_ROOT_PASSWORD=RootPassword123!
+      - MYSQL_DATABASE=bookstackdb
+      - MYSQL_USER=bookstackuser
+      - MYSQL_PASSWORD=SuaSenhaSeguraAqui123!
+    volumes:
+      # Usando caminho relativo (cria pasta no diretório atual)
+      - ./bookstack_database:/var/lib/mysql
+    restart: unless-stopped
